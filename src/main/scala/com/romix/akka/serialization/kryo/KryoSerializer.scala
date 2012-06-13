@@ -17,7 +17,6 @@
 package com.romix.akka.serialization.kryo
 
 import akka.serialization._
-import akka.actor.ExtendedActorSystem
 import akka.event.Logging
 import com.typesafe.config.ConfigFactory
 import scala.collection.JavaConversions._
@@ -25,10 +24,13 @@ import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.objenesis.strategy.StdInstantiatorStrategy
+import com.esotericsoftware.kryo.serializers.JavaSerializer
 
 import KryoSerialization._
 import com.esotericsoftware.minlog.{Log => MiniLog}
 import akka.actor.TypedActor.MethodCall
+import akka.actor.{TypedActor, ActorRef, ExtendedActorSystem}
+import akka.TypedActorInvocationHandlerClassGetter
 
 class KryoSerializer (val system: ExtendedActorSystem) extends Serializer {
 
@@ -110,6 +112,8 @@ class KryoSerializer (val system: ExtendedActorSystem) extends Serializer {
     // Support deserialization of classes without no-arg constructors
     kryo.setInstantiatorStrategy(new StdInstantiatorStrategy())
     kryo.addDefaultSerializer(classOf[MethodCall], classOf[MethodCallSerializer])
+    kryo.addDefaultSerializer(classOf[ActorRef], classOf[JavaSerializer])
+    kryo.addDefaultSerializer(TypedActorInvocationHandlerClassGetter.get, classOf[JavaSerializer])
     // Support serialization of Scala collections
 //			kryo.addDefaultSerializer(classOf[scala.collection.Map[_,_]], classOf[ScalaMapSerializer])
 //			kryo.addDefaultSerializer(classOf[scala.collection.Set[_]], classOf[ScalaSetSerializer])

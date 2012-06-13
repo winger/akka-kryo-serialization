@@ -18,7 +18,7 @@ class MethodCallSerializer extends Serializer[MethodCall] {
   }
 
   def read(kryo: Kryo, input: Input, clazz: Class[MethodCall]) = {
-    kryo.reference(null)
+    kryo.reference(new Object())
     val ownerType = kryo.readClass(input).getType
     val methodName = input.readString()
     val paramTypes = kryo.readObject(input, classOf[Array[Class[_]]])
