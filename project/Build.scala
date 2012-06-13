@@ -23,17 +23,19 @@ object MinimalBuild extends Build {
 
   lazy val typesafe = "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
   lazy val typesafeSnapshot = "Typesafe Snapshots Repository" at "http://repo.typesafe.com/typesafe/snapshots/"
+  lazy val mavenLocal = "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
   lazy val root = Project(id = "akka-kryo-serialization", base = file("."), settings = Project.defaultSettings).settings(
     version := buildVersion,
     organization := "com.romix.akka",
     resolvers += typesafe,
     resolvers += typesafeSnapshot,
+    resolvers += mavenLocal,
     publishArtifact in packageDoc := false,
     // disable using the Scala version in output paths and artifacts
     crossPaths := false,
-    libraryDependencies += "com.typesafe.akka" % "akka-remote" % "2.0",
-    libraryDependencies += "com.typesafe.akka" % "akka-kernel" % "2.0",
-    libraryDependencies += "com.esotericsoftware.kryo" % "kryo" % "2.10"
+    libraryDependencies += "com.typesafe.akka" % "akka-remote" % "2.1-SNAPSHOT",
+    libraryDependencies += "com.typesafe.akka" % "akka-kernel" % "2.1-SNAPSHOT",
+    libraryDependencies += "com.esotericsoftware.kryo" % "kryo" % "2.14-SNAPSHOT"
     )
 }

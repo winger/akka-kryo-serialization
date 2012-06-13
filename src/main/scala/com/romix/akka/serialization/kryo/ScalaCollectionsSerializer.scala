@@ -70,7 +70,7 @@ class ScalaCollectionSerializer ( val kryo: Kryo ) extends Serializer[Traversabl
 		serializer = _serializer
 	}
 
-	override def create(kryo: Kryo, input: Input, typ: Class[Traversable[_]]): Traversable[_]  = {
+	override def read(kryo: Kryo, input: Input, typ: Class[Traversable[_]]): Traversable[_]  = {
 		val len = if (length != 0) length else input.readInt(true)
 		val inst = kryo.newInstance(typ)
 		val coll = inst.asInstanceOf[Traversable[Any]].genericBuilder[Any]
@@ -161,7 +161,7 @@ class ScalaMapSerializer ( val kryo: Kryo ) extends Serializer[Map[_,_]] {
 		valueSerializer = _serializer
 	}
 	
-	override def create(kryo: Kryo, input: Input, typ: Class[Map[_,_]]): Map[_,_]  = {
+	override def read(kryo: Kryo, input: Input, typ: Class[Map[_,_]]): Map[_,_]  = {
 		val len = if (length != 0) length else input.readInt(true)
 		
 		var coll: Map[Any, Any] = 
@@ -268,7 +268,7 @@ class ScalaSetSerializer ( val kryo: Kryo ) extends Serializer[Set[_]] {
 		serializer = _serializer
 	}
 
-	override def create(kryo: Kryo, input: Input, typ: Class[Set[_]]): Set[_]  = {
+	override def read(kryo: Kryo, input: Input, typ: Class[Set[_]]): Set[_]  = {
 		val len = if (length != 0) length else input.readInt(true)
 		
 		var coll: Set[Any] = 
