@@ -94,7 +94,7 @@ class KryoSerializer (val system: ExtendedActorSystem) extends Serializer {
 		
 	def fromBinary(bytes: Array[Byte], clazz: Option[Class[_]]): AnyRef = {
 			val ser = getSerializer
-			val obj = ser.fromBinary(bytes, clazz)
+			val obj = akka.serialization.JavaSerializer.currentSystem.withValue(system) { ser.fromBinary(bytes, clazz) }
 			releaseSerializer(ser)
 			obj
 	}
@@ -219,7 +219,7 @@ class KryoBasedSerializer(val kryo: Kryo, val bufferSize: Int, val bufferPoolSiz
 	// using the type hint (if any, see "includeManifest" above)
 	// into the optionally provided classLoader.
 	def fromBinary(bytes: Array[Byte], clazz: Option[Class[_]]): AnyRef = {
-		kryo.readClassAndObject(new Input(bytes)) 
+		kryo.readClassAndObject(new Input(bytes))
 	}
 	
 	val buf = new Output(1024, 1024 * 1024)
@@ -227,7 +227,6 @@ class KryoBasedSerializer(val kryo: Kryo, val bufferSize: Int, val bufferPoolSiz
 	private def releaseBuffer(buffer: Output) = { buffer.clear() } 
 		
 }
-
 
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.atomic.AtomicInteger
